@@ -54,7 +54,7 @@ export default class LayoutBase extends React.Component<any, any> {
             theme="dark"
             mode="horizontal"
             onClick={this.switchMenuItem}
-            defaultSelectedKeys={['taskBoard']}
+            defaultSelectedKeys={['taskList']}
             style={{
               background: 'rgb(33,42,68)',
               width: '50%',
