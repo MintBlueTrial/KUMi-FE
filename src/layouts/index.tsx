@@ -10,13 +10,24 @@ import {
   BellOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Breadcrumb, Avatar, Badge } from 'antd';
+import { Link } from 'react-router-dom';
 
 const { Header, Content, Footer } = Layout;
 
 // 菜单项
 const menuItems = [
-  { key: 'taskBoard', itemName: '任务看板', icon: <PieChartOutlined /> },
-  { key: 'taskList', itemName: '任务列表', icon: <BarsOutlined /> },
+  {
+    key: 'taskBoard',
+    itemName: '任务看板',
+    icon: <PieChartOutlined />,
+    path: '/board',
+  },
+  {
+    key: 'taskList',
+    itemName: '任务列表',
+    icon: <BarsOutlined />,
+    path: '/list',
+  },
 ];
 
 export default class LayoutBase extends React.Component<any, any> {
@@ -53,7 +64,7 @@ export default class LayoutBase extends React.Component<any, any> {
             {menuItems.map((item) => {
               return (
                 <Menu.Item key={item.key} icon={item.icon}>
-                  {item.itemName}
+                  <Link to={item.path}>{item.itemName}</Link>
                 </Menu.Item>
               );
             })}
