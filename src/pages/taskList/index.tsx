@@ -12,51 +12,63 @@ import {
   Button,
   Select,
   DatePicker,
+  Progress,
 } from 'antd';
+import { KumiApi } from '@/models';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 // 测试数据
 const columns = [
-  { title: '任务名称', dataIndex: 'taskName', key: 'taskName', width: '20%' },
+  { title: '任务名称', dataIndex: 'taskName', key: 'taskName', width: '15%' },
   {
     title: '任务内容',
     dataIndex: 'taskContent',
     key: 'taskContent',
-    width: '30%',
+    width: '25%',
   },
   {
     title: '任务状态',
-    dataIndex: 'taskState',
-    key: 'taskState',
+    dataIndex: 'taskStatus',
+    key: 'taskStatus',
     width: '5%',
-    render: (taskState: any) => (
-      <>
-        {taskState.map((state: string) => {
-          let color = '#0099CC';
-          if (state === 'finish') {
-            color = '#99CC66';
-          } else if (state === 'going') {
-            color = '#FF9900';
-          }
-          return (
-            <Tag color={color} key={state}>
-              {state.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    render: (taskStatus: any) => {
+      let color = '#0099CC';
+      if (taskStatus === 'finish') {
+        color = '#99CC66';
+      } else if (taskStatus === 'going') {
+        color = '#FF9900';
+      }
+      return (
+        <Tag color={color} key={taskStatus}>
+          {taskStatus.toUpperCase()}
+        </Tag>
+      );
+    },
   },
   {
-    title: '进度',
-    dataIndex: 'taskProgress',
-    key: 'taskProgress',
-    width: '5%',
+    title: '完成进度',
+    dataIndex: 'taskPrograss',
+    key: 'taskPrograss',
+    width: '10%',
+    render: (taskPrograss: any) => {
+      let color = '#99CC66';
+      if (taskPrograss < 100) {
+        color = '#FF9900';
+      }
+      return (
+        <Progress percent={taskPrograss} strokeColor={color} size="small" />
+      );
+    },
   },
-  { title: '开始时间', dataIndex: 'startTime', key: 'startTime' },
-  { title: '结束时间', dataIndex: 'endTime', key: 'endTime' },
+  { title: '开始时间', dataIndex: 'beginTime', key: 'beginTime', width: '15%' },
+  {
+    title: '结束时间',
+    dataIndex: 'finishTime',
+    key: 'finishTime',
+    width: '15%',
+  },
   { title: '创建人', dataIndex: 'creator', key: 'creator' },
   {
     title: '操作',
@@ -71,44 +83,23 @@ const columns = [
   },
 ];
 
-// 测试数据
-const data = [
-  {
-    key: '1',
-    taskName: '任务1',
-    taskContent: '前端测试1',
-    taskState: ['ready'],
-    taskProgress: 0,
-    startTime: '2021.09.11',
-    endTime: '2021.09.11',
-    creator: 'DDDDanny',
-  },
-  {
-    key: '2',
-    taskName: '任务2',
-    taskContent: '前端测试2',
-    taskState: ['going'],
-    taskProgress: 50,
-    startTime: '2021.09.11',
-    endTime: '2021.09.11',
-    creator: 'DDDDanny',
-  },
-  {
-    key: '3',
-    taskName: '任务3',
-    taskContent: '前端测试3',
-    taskState: ['finish'],
-    taskProgress: 100,
-    startTime: '2021.09.11',
-    endTime: '2021.09.11',
-    creator: 'DDDDanny',
-  },
-];
+// 实例化KumiApi
+const api = new KumiApi();
 
 export default class TaskList extends React.Component<any, any> {
   // 构造函数
   constructor(props: any) {
     super(props);
+    this.state = {
+      data: [],
+    };
+  }
+
+  componentDidMount() {
+    // 组件挂载完成后，调获取任务列表接口
+    api.getTaskList().then((response: any) => {
+      this.setState({ data: response.data });
+    });
   }
 
   onFinish = (values: any) => {
@@ -169,7 +160,7 @@ export default class TaskList extends React.Component<any, any> {
           </Row>
         </Form>
         <Divider orientation="left">任务表</Divider>
-        <Table dataSource={data} columns={columns} bordered />
+        <Table dataSource={this.state.data} columns={columns} bordered />
       </div>
     );
   }
