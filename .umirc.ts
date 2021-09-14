@@ -10,8 +10,18 @@ export default defineConfig({
       path: '/',
       component: '@/layouts/index',
       routes: [
-        { exact: true, path: '/board', component: '@/pages/taskBoard/index' },
-        { exact: true, path: '/list', component: '@/pages/taskList/index' },
+        {
+          exact: true,
+          path: '/board',
+          component: '@/pages/taskBoard/index',
+          title: 'KUMi - 任务看板',
+        },
+        {
+          exact: true,
+          path: '/list',
+          component: '@/pages/taskList/index',
+          title: 'KUMi - 任务列表',
+        },
       ],
     },
   ],
