@@ -9,8 +9,10 @@ import request from 'umi-request';
 
 export class KumiApi {
   // 获取所有任务
-  async getTaskList(): Promise<any> {
-    const res = await request.get('/api/task/get/all');
+  async getTaskList(params: any): Promise<any> {
+    const res = await request.get('/api/task/get/all', {
+      params: params,
+    });
     return res;
   }
 }

@@ -91,19 +91,42 @@ export default class TaskList extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      data: [],
+      data: [], // 表格数据
     };
   }
 
   componentDidMount() {
     // 组件挂载完成后，调获取任务列表接口
-    api.getTaskList().then((response: any) => {
+    api.getTaskList({}).then((response: any) => {
       this.setState({ data: response.data });
     });
   }
 
+  // 提交搜索表单
   onFinish = (values: any) => {
-    console.log('Success:', values);
+    // 构造参数（基本）
+    const paramsBase = {
+      taskName: values.taskName == '' ? undefined : values.taskName,
+      taskStatus: values.taskStatus == '' ? undefined : values.taskStatus,
+    };
+    // 构造参数（时间）
+    var paramsTime = {};
+    if (values.taskTime == undefined) {
+      paramsTime = {
+        beginTime: undefined,
+        finishTime: undefined,
+      };
+    } else {
+      paramsTime = {
+        beginTime: values.taskTime[0].valueOf(),
+        finishTime: values.taskTime[1].valueOf(),
+      };
+    }
+    api
+      .getTaskList(Object.assign(paramsBase, paramsTime))
+      .then((response: any) => {
+        this.setState({ data: response.data });
+      });
   };
 
   onFinishFailed = (errorInfo: any) => {
@@ -128,7 +151,7 @@ export default class TaskList extends React.Component<any, any> {
               </Form.Item>
             </Col>
             <Col span="6">
-              <Form.Item label="任务状态" name="taskState">
+              <Form.Item label="任务状态" name="taskStatus">
                 <Select placeholder="请选择任务状态" allowClear>
                   <Option value="finish">已完成</Option>
                   <Option value="going">进行中</Option>
