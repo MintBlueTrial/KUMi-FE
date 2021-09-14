@@ -160,7 +160,12 @@ export default class TaskList extends React.Component<any, any> {
           </Row>
         </Form>
         <Divider orientation="left">任务表</Divider>
-        <Table dataSource={this.state.data} columns={columns} bordered />
+        <Table
+          dataSource={this.state.data}
+          columns={columns}
+          rowKey={(columns) => columns._id}
+          bordered
+        />
       </div>
     );
   }
