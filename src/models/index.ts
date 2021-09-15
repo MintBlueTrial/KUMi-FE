@@ -15,4 +15,12 @@ export class KumiApi {
     });
     return res;
   }
+
+  // 新增任务
+  async createTask(params: any): Promise<any> {
+    const res = await request.post('/api/task/create', {
+      data: params,
+    });
+    return res;
+  }
 }
