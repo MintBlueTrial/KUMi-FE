@@ -13,6 +13,7 @@ import {
   Select,
   DatePicker,
   Progress,
+  message,
 } from 'antd';
 import { KumiApi } from '@/models';
 
@@ -126,6 +127,7 @@ export default class TaskList extends React.Component<any, any> {
       .getTaskList(Object.assign(paramsBase, paramsTime))
       .then((response: any) => {
         this.setState({ data: response.data });
+        message.success('查询成功');
       });
   };
 
