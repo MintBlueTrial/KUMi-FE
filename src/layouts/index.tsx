@@ -48,7 +48,10 @@ export default class LayoutBase extends React.Component<any, any> {
   render() {
     return (
       <Layout className={styles.layout_full}>
-        <Header style={{ background: 'rgb(33,42,68)' }}>
+        <Header
+          style={{ background: 'rgb(33,42,68)' }}
+          className={styles.header}
+        >
           <div className={styles.logo}></div>
           <Menu
             theme="dark"
@@ -84,7 +87,7 @@ export default class LayoutBase extends React.Component<any, any> {
             </Badge>
           </span>
         </Header>
-        <Content style={{ padding: '0 50px', height: '100%' }}>
+        <Content style={{ padding: '65px 50px 0 50px', height: '100%' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>{<HomeOutlined />}</Breadcrumb.Item>
             <Breadcrumb.Item>任务</Breadcrumb.Item>
@@ -92,13 +95,7 @@ export default class LayoutBase extends React.Component<any, any> {
           </Breadcrumb>
           <div className={styles.site}>{this.props.children}</div>
         </Content>
-        <Footer
-          style={{
-            textAlign: 'center',
-            background: 'rgb(33,42,68)',
-            color: '#fff',
-          }}
-        >
+        <Footer style={{ textAlign: 'center' }} className={styles.footer}>
           MintBlue Design ©2021 Created by DDDDanny
         </Footer>
       </Layout>
