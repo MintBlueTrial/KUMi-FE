@@ -35,7 +35,8 @@ export default class TaskList extends React.Component<any, any> {
     this.state = {
       data: [], // 表格数据
       isModalVisible: false, // 控制新增任务的Model是否出现
-      createTaskInfo: {},
+      createTaskInfo: {}, // 创建任务信息
+      queryStatus: false, // 判断是否查询成功
     };
     // 测试数据
     this.columns = [
@@ -112,11 +113,27 @@ export default class TaskList extends React.Component<any, any> {
     ];
   }
 
+  // 封装查询任务列表逻辑
+  queryTaskList(Params: any) {
+    api
+      .getTaskList(Params)
+      .then((response: any) => {
+        if (response.code != 0) {
+          message.error(response.msg);
+          this.setState({ queryStatus: false });
+          return;
+        }
+        this.setState({ data: response.data, queryStatus: true });
+      })
+      .catch((error: any) => {
+        message.error(`查询失败：${error}`);
+        this.setState({ queryStatus: false });
+      });
+  }
+
   componentDidMount() {
-    // 组件挂载完成后，调获取任务列表接口
-    api.getTaskList({}).then((response: any) => {
-      this.setState({ data: response.data });
-    });
+    // 组件挂载完成后，调获取任务列表接口（查询所有数据）
+    this.queryTaskList({});
   }
 
   // 提交搜索表单
@@ -139,12 +156,12 @@ export default class TaskList extends React.Component<any, any> {
         finishTime: values.taskTime[1].valueOf(),
       };
     }
-    api
-      .getTaskList(Object.assign(paramsBase, paramsTime))
-      .then((response: any) => {
-        this.setState({ data: response.data });
-        message.success('查询成功');
-      });
+    // 调用查询任务列表接口
+    this.queryTaskList(Object.assign(paramsBase, paramsTime));
+    // 如果查询成功，则显示Message
+    if (this.state.queryStatus) {
+      message.success('查询成功');
+    }
   };
 
   // 打开新增任务Model
@@ -183,10 +200,8 @@ export default class TaskList extends React.Component<any, any> {
         message.success('新增任务成功');
         // 关闭Model
         this.setState({ isModalVisible: false });
-        // 刷新列表信息
-        api.getTaskList({}).then((response: any) => {
-          this.setState({ data: response.data });
-        });
+        // 调用查询任务列表接口,刷新列表信息
+        this.queryTaskList({});
       })
       .catch((error: any) => {
         message.success(`新增失败：${error}`);
