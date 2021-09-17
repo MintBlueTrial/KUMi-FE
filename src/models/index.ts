@@ -23,4 +23,12 @@ export class KumiApi {
     });
     return res;
   }
+
+  // 删除任务
+  async deleteTask(params: any): Promise<any> {
+    const res = await request.post('/api/task/delete', {
+      data: params,
+    });
+    return res;
+  }
 }
