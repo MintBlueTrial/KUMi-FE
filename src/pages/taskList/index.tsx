@@ -102,15 +102,26 @@ export default class TaskList extends React.Component<any, any> {
       {
         title: '操作',
         key: 'action',
-        render: () => (
+        render: (data: any) => (
           <Space size="middle">
             <a onClick={this.showAddTaskModel}>新增</a>
             <a>编辑</a>
-            <a>删除</a>
+            <a
+              onClick={() => {
+                this.handleDeleteTask(data);
+              }}
+            >
+              删除
+            </a>
           </Space>
         ),
       },
     ];
+  }
+
+  // 处理删除
+  handleDeleteTask(values: any) {
+    console.log(values);
   }
 
   // 封装查询任务列表逻辑
