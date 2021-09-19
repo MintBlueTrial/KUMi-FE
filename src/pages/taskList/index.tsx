@@ -1,5 +1,10 @@
 import React from 'react';
-import { SearchOutlined, CheckOutlined, UndoOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  CheckOutlined,
+  UndoOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import {
   Divider,
   Row,
@@ -108,7 +113,7 @@ export default class TaskList extends React.Component<any, any> {
             <a>编辑</a>
             <a
               onClick={() => {
-                this.handleDeleteTask(data);
+                this.confirmDeleteTask(data);
               }}
             >
               删除
@@ -119,10 +124,45 @@ export default class TaskList extends React.Component<any, any> {
     ];
   }
 
-  // 处理删除
-  handleDeleteTask(values: any) {
-    console.log(values);
+  // 确认是否删除任务
+  confirmDeleteTask(data: any) {
+    // 删除前，Modal确认框配置
+    Modal.confirm({
+      title: '确认删除任务吗？',
+      icon: <ExclamationCircleOutlined />,
+      content: `将被删除的任务名称：${data.taskName}`,
+      okText: '确认删除',
+      okButtonProps: { danger: true },
+      onOk: () => {
+        this.handleDeleteTask(data.taskId);
+      },
+      cancelText: '取消',
+    });
   }
+
+  // 处理删除任务
+  handleDeleteTask = (taskId: string) => {
+    // 判断传入数据是否为空
+    if (!taskId) {
+      message.error(`删除失败!`);
+      return;
+    }
+    // 调用删除任务接口
+    api
+      .deleteTask({ taskId })
+      .then((response: any) => {
+        if (response.code != 0) {
+          message.error(response.msg);
+          return;
+        }
+        message.success('删除任务成功!');
+        //  删除成功后，刷新任务列表数据
+        this.queryTaskList({});
+      })
+      .catch((error: any) => {
+        message.error(`删除失败！失败原因：${error}`);
+      });
+  };
 
   // 封装查询任务列表逻辑
   queryTaskList(Params: any) {
