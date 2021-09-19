@@ -9,7 +9,7 @@ import {
   UserOutlined,
   BellOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Breadcrumb, Avatar, Badge } from 'antd';
+import { Layout, Menu, Breadcrumb, Avatar, Badge, message } from 'antd';
 import { Link } from 'react-router-dom';
 
 const { Header, Content, Footer } = Layout;
@@ -37,6 +37,12 @@ export default class LayoutBase extends React.Component<any, any> {
     this.state = {
       menuPos: '看板',
     };
+    // 配置message
+    message.config({
+      duration: 2,
+      maxCount: 3,
+      top: 70,
+    });
   }
 
   // 切换菜单
