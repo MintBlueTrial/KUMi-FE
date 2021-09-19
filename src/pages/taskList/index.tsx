@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { KumiApi } from '@/models';
 import TaskModal from './taskInfoModal';
+import TaskEditModal from './taskInfoEditModal';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -41,8 +42,10 @@ export default class TaskList extends React.Component<any, any> {
     this.state = {
       data: [], // 表格数据
       isAddTaskModalVisible: false, // 控制新增任务的Model是否出现
+      isEditTaskModalVisible: false, // 控制编辑任务Modal是否出现
       createTaskInfo: {}, // 创建任务信息
       queryStatus: false, // 判断是否查询成功
+      editData: {}, // 需要编辑的数据
     };
     // 测试数据
     this.columns = [
@@ -114,7 +117,11 @@ export default class TaskList extends React.Component<any, any> {
             <a onClick={this.showAddTaskModel} style={{ color: '#99CC00' }}>
               <PlusOutlined />
             </a>
-            <a>
+            <a
+              onClick={() => {
+                this.showEditTaskModel(data);
+              }}
+            >
               <EditOutlined />
             </a>
             <a
@@ -224,7 +231,17 @@ export default class TaskList extends React.Component<any, any> {
 
   // 打开新增任务Model
   showAddTaskModel = () => {
+    // 保证新增和编辑只有一个Modal展示
     this.setState({ isAddTaskModalVisible: true });
+    this.setState({ isEditTaskModalVisible: false });
+  };
+
+  // 打开编辑任务Model
+  showEditTaskModel = (data: any) => {
+    // 保证新增和编辑只有一个Modal展示
+    this.setState({ isEditTaskModalVisible: true });
+    this.setState({ isAddTaskModalVisible: false });
+    this.setState({ editData: data });
   };
 
   // 提交新增任务表单
@@ -326,6 +343,12 @@ export default class TaskList extends React.Component<any, any> {
         <TaskModal
           title="新增任务"
           isModalVisible={this.state.isAddTaskModalVisible}
+          onFinish={(values: any) => this.handleSubmitAddTask(values)}
+        />
+        <TaskEditModal
+          title="编辑任务"
+          isModalVisible={this.state.isEditTaskModalVisible}
+          editData={this.state.editData}
           onFinish={(values: any) => this.handleSubmitAddTask(values)}
         />
       </div>
