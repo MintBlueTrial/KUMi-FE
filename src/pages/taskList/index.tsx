@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   SearchOutlined,
-  CheckOutlined,
-  UndoOutlined,
   ExclamationCircleOutlined,
   DeleteOutlined,
   EditOutlined,
@@ -25,8 +23,8 @@ import {
   Modal,
 } from 'antd';
 import { KumiApi } from '@/models';
+import TaskModal from './taskInfoModal';
 
-const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -42,7 +40,7 @@ export default class TaskList extends React.Component<any, any> {
     super(props);
     this.state = {
       data: [], // 表格数据
-      isModalVisible: false, // 控制新增任务的Model是否出现
+      isAddTaskModalVisible: false, // 控制新增任务的Model是否出现
       createTaskInfo: {}, // 创建任务信息
       queryStatus: false, // 判断是否查询成功
     };
@@ -226,12 +224,7 @@ export default class TaskList extends React.Component<any, any> {
 
   // 打开新增任务Model
   showAddTaskModel = () => {
-    this.setState({ isModalVisible: true });
-  };
-
-  // 点击取消，关闭新增任务Model
-  handleCancel = () => {
-    this.setState({ isModalVisible: false });
+    this.setState({ isAddTaskModalVisible: true });
   };
 
   // 提交新增任务表单
@@ -259,7 +252,7 @@ export default class TaskList extends React.Component<any, any> {
         // 新增成功提示信息
         message.success('新增任务成功');
         // 关闭Model
-        this.setState({ isModalVisible: false });
+        this.setState({ isAddTaskModalVisible: false });
         // 调用查询任务列表接口,刷新列表信息
         this.queryTaskList({});
       })
@@ -330,103 +323,11 @@ export default class TaskList extends React.Component<any, any> {
           }}
           bordered
         />
-        <Modal
+        <TaskModal
           title="新增任务"
-          width={600}
-          visible={this.state.isModalVisible}
-          onCancel={this.handleCancel}
-          destroyOnClose
-          maskClosable={false}
-          footer={null}
-          key={666}
-        >
-          <Form
-            name="basic"
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 16 }}
-            initialValues={{ remember: true }}
-            autoComplete="off"
-            onFinish={this.handleSubmitAddTask}
-          >
-            <Form.Item
-              label="任务名称"
-              name="taskName"
-              rules={[{ required: true, message: '请输入任务名称！' }]}
-            >
-              <Input placeholder="请输入任务名称" allowClear />
-            </Form.Item>
-            <Form.Item
-              label="任务内容"
-              name="taskContent"
-              rules={[{ required: true, message: '请输入任务内容！' }]}
-            >
-              <TextArea
-                showCount
-                maxLength={200}
-                rows={3}
-                placeholder="请输入任务内容"
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item
-              label="任务状态"
-              name="taskStatus"
-              rules={[{ required: true, message: '请选择任务状态！' }]}
-            >
-              <Select placeholder="请选择任务状态" allowClear>
-                <Option value="finish">已完成</Option>
-                <Option value="going">进行中</Option>
-                <Option value="ready">未开始</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="执行时间"
-              name="taskTime"
-              rules={[{ required: true, message: '请输入任务执行时间！' }]}
-            >
-              <RangePicker
-                showTime
-                allowClear
-                placeholder={['任务开始时间', '任务结束时间']}
-              />
-            </Form.Item>
-            <Form.Item
-              label="任务进度"
-              name="taskProgress"
-              rules={[{ required: true, message: '请输入任务进度！' }]}
-            >
-              <Input placeholder="请输入任务进度" allowClear suffix="%" />
-            </Form.Item>
-            <Divider />
-            <Row justify="center" gutter={[16, 8]}>
-              <Col span="6">
-                <Form.Item>
-                  <Button
-                    icon={<CheckOutlined />}
-                    type="primary"
-                    htmlType="submit"
-                    shape="round"
-                    style={{ width: 100 }}
-                  >
-                    确 定
-                  </Button>
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item>
-                  <Button
-                    icon={<UndoOutlined />}
-                    shape="round"
-                    style={{ width: 100 }}
-                    onClick={this.handleCancel}
-                  >
-                    取 消
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Modal>
+          isModalVisible={this.state.isAddTaskModalVisible}
+          onFinish={(values: any) => this.handleSubmitAddTask(values)}
+        />
       </div>
     );
   }
