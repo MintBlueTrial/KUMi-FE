@@ -4,6 +4,9 @@ import {
   CheckOutlined,
   UndoOutlined,
   ExclamationCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import {
   Divider,
@@ -107,16 +110,22 @@ export default class TaskList extends React.Component<any, any> {
       {
         title: '操作',
         key: 'action',
+        width: '5%',
         render: (data: any) => (
           <Space size="middle">
-            <a onClick={this.showAddTaskModel}>新增</a>
-            <a>编辑</a>
+            <a onClick={this.showAddTaskModel} style={{ color: '#99CC00' }}>
+              <PlusOutlined />
+            </a>
+            <a>
+              <EditOutlined />
+            </a>
             <a
               onClick={() => {
                 this.confirmDeleteTask(data);
               }}
+              style={{ color: 'red' }}
             >
-              删除
+              <DeleteOutlined />
             </a>
           </Space>
         ),
