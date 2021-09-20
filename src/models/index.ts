@@ -31,4 +31,12 @@ export class KumiApi {
     });
     return res;
   }
+
+  // 编辑任务
+  async editTask(params: any): Promise<any> {
+    const res = await request.post('/api/task/edit', {
+      data: params,
+    });
+    return res;
+  }
 }
