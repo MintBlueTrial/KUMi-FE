@@ -282,6 +282,38 @@ export default class TaskList extends React.Component<any, any> {
       });
   };
 
+  // 提交编辑任务表单
+  handleSubmitEditTask = (values: any) => {
+    const editTaskInfo = {
+      taskId: values.taskId,
+      taskName: values.taskName,
+      taskContent: values.taskContent,
+      taskStatus: values.taskStatus,
+      taskPrograss: Number(values.taskProgress),
+      beginTime: values.taskTime[0].valueOf(),
+      finishTime: values.taskTime[1].valueOf(),
+    };
+    // 调用编辑任务接口
+    api
+      .editTask(editTaskInfo)
+      .then((response: any) => {
+        // 当请求成功但是后端处理失败时，打印错误信息
+        if (response.code != 0) {
+          message.error(response.msg);
+          return;
+        }
+        // 编辑任务成功提示信息
+        message.success('编辑任务成功');
+        // 关闭Model
+        this.setState({ isEditTaskModalVisible: false });
+        // 调用查询任务列表接口,刷新列表信息
+        this.queryTaskList({});
+      })
+      .catch((error: any) => {
+        message.success(`编辑失败：${error}`);
+      });
+  };
+
   render() {
     return (
       <div>
@@ -349,7 +381,7 @@ export default class TaskList extends React.Component<any, any> {
           title="编辑任务"
           isModalVisible={this.state.isEditTaskModalVisible}
           editData={this.state.editData}
-          onFinish={(values: any) => this.handleSubmitAddTask(values)}
+          onFinish={(values: any) => this.handleSubmitEditTask(values)}
         />
       </div>
     );
