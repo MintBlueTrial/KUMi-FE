@@ -64,6 +64,13 @@ export default class TaskEditModal extends React.Component<any, any> {
           onFinish={(values: any) => this.props.onFinish(values)}
         >
           <Form.Item
+            name="taskId"
+            initialValue={this.state.data.taskId}
+            style={{ display: 'none' }}
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item
             label="任务名称"
             name="taskName"
             rules={[{ required: true, message: '请输入任务名称！' }]}
@@ -101,6 +108,10 @@ export default class TaskEditModal extends React.Component<any, any> {
             label="执行时间"
             name="taskTime"
             rules={[{ required: true, message: '请输入任务执行时间！' }]}
+            initialValue={[
+              moment(this.state.data.beginTime),
+              moment(this.state.data.finishTime),
+            ]}
           >
             <RangePicker
               allowClear
