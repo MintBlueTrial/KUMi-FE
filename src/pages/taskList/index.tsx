@@ -310,9 +310,9 @@ export default class TaskList extends React.Component<any, any> {
             <Col span="6">
               <Form.Item label="执行时间" name="taskTime">
                 <RangePicker
-                  showTime
                   allowClear
                   placeholder={['任务开始时间', '任务结束时间']}
+                  style={{ width: 350 }}
                 />
               </Form.Item>
             </Col>

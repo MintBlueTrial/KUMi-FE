@@ -103,9 +103,9 @@ export default class TaskEditModal extends React.Component<any, any> {
             rules={[{ required: true, message: '请输入任务执行时间！' }]}
           >
             <RangePicker
-              showTime
               allowClear
               placeholder={['任务开始时间', '任务结束时间']}
+              style={{ width: 370 }}
             />
           </Form.Item>
           <Form.Item
